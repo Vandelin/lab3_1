@@ -30,7 +30,7 @@ public class Id implements Serializable{
 		this.id = id;
 	}
 
-	protected Id() {
+	public Id() {
 	}
 	
 	public static Id generate(){
