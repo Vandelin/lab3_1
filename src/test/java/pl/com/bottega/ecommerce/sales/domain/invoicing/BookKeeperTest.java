@@ -13,8 +13,7 @@ import pl.com.bottega.ecommerce.sharedkernel.Money;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BookKeeperTest {
@@ -43,6 +42,41 @@ public class BookKeeperTest {
         Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
 
         Assert.assertThat(invoice.getItems().size(), is(1));
+
+    }
+
+    @Test
+    public void givenInvoiceRequestTwoItemsWhenIssuanceThenTaxPolicyMethodTwoTimes() {
+        invoiceRequest.add(new RequestItem(mock(ProductData.class), 10, Money.ZERO));
+        invoiceRequest.add(new RequestItem(mock(ProductData.class), 10, Money.ZERO));
+
+        Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+
+        verify(taxPolicy, times(2)).calculateTax(anyObject(), anyObject());
+
+    }
+
+    @Test
+    public void givenInvoiceRequestZeroItemsWhenIssuanceThenInvoiceWithZeroItems() {
+        Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+
+        Assert.assertThat(invoice.getItems().size(), is(0));
+    }
+
+    @Test
+    public void givenInvoiceRequestMoneyTenWhenIssuanceThenInvoiceHaveGrosTen() {
+        invoiceRequest.add(new RequestItem(mock(ProductData.class), 20, new Money(10)));
+        Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+        Assert.assertTrue(invoice.getGros().equals(new Money(10)));
+
+
+    }
+
+    @Test
+    public void givenInvoiceRequestQuantityTwentyWhenIssuanceInvoiceItemQuantityTwenty() {
+        invoiceRequest.add(new RequestItem(mock(ProductData.class), 20, new Money(10)));
+        Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+        Assert.assertThat(invoice.getItems().get(0).getQuantity(), is(20));
 
     }
 }
