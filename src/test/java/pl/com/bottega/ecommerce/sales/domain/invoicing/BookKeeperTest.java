@@ -73,10 +73,29 @@ public class BookKeeperTest {
     }
 
     @Test
-    public void givenInvoiceRequestQuantityTwentyWhenIssuanceInvoiceItemQuantityTwenty() {
+    public void givenInvoiceRequestQuantityTwentyWhenIssuanceThenInvoiceItemQuantityTwenty() {
         invoiceRequest.add(new RequestItem(mock(ProductData.class), 20, new Money(10)));
         Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
         Assert.assertThat(invoice.getItems().get(0).getQuantity(), is(20));
 
+    }
+
+    @Test
+    public void givenInvoiceFactoryWhenIssuanceThenInvoiceFactoryCalledOnce(){
+        ClientData clientData = mock(ClientData.class);
+        InvoiceFactory invoiceFactory = mock(InvoiceFactory.class);
+        when(invoiceFactory.create(clientData)).thenReturn(null);
+        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
+        InvoiceRequest invoiceRequest = new InvoiceRequest(clientData);
+        bookKeeper.issuance(invoiceRequest, taxPolicy);
+        verify(invoiceFactory, times(1)).create(any(ClientData.class));
+    }
+
+    @Test
+    public void givenInvoiceFactoryWhenIssuanceThenNeverCallCalculateTaxMethod(){
+        InvoiceFactory invoiceFactory = mock(InvoiceFactory.class);
+        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
+        bookKeeper.issuance(invoiceRequest, taxPolicy);
+        verify(taxPolicy, times(0)).calculateTax(anyObject(),anyObject());
     }
 }
