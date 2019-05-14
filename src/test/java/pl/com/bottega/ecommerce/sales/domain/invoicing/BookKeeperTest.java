@@ -81,7 +81,7 @@ public class BookKeeperTest {
     }
 
     @Test
-    public void givenInvoiceFactoryWhenIssuanceThenInvoiceFactoryCalledOnce(){
+    public void givenInvoiceFactoryWhenIssuanceThenInvoiceFactoryCalledOnce() {
         ClientData clientData = mock(ClientData.class);
         InvoiceFactory invoiceFactory = mock(InvoiceFactory.class);
         when(invoiceFactory.create(clientData)).thenReturn(null);
@@ -92,10 +92,10 @@ public class BookKeeperTest {
     }
 
     @Test
-    public void givenInvoiceFactoryWhenIssuanceThenNeverCallCalculateTaxMethod(){
+    public void givenInvoiceFactoryWhenIssuanceThenNeverCallCalculateTaxMethod() {
         InvoiceFactory invoiceFactory = mock(InvoiceFactory.class);
         BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
         bookKeeper.issuance(invoiceRequest, taxPolicy);
-        verify(taxPolicy, times(0)).calculateTax(anyObject(),anyObject());
+        verify(taxPolicy, times(0)).calculateTax(anyObject(), anyObject());
     }
 }

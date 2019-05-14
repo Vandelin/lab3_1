@@ -15,65 +15,64 @@
  */
 package pl.com.bottega.ecommerce.sales.domain.invoicing;
 
+import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
+import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
+import pl.com.bottega.ecommerce.sharedkernel.Money;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
-import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
-import pl.com.bottega.ecommerce.sharedkernel.Money;
+
+public class Invoice {
 
 
-public class Invoice  {
+    private ClientData client;
 
 
-	private ClientData client;
+    private Money net;
+
+    private Money gros;
+
+    private List<InvoiceLine> items;
 
 
-	private Money net;
+    private Id id;
 
-	private Money gros;
+    Invoice(Id invoiceId, ClientData client) {
+        this.id = invoiceId;
+        this.client = client;
+        this.items = new ArrayList<InvoiceLine>();
 
-	private List<InvoiceLine> items;
+        this.net = Money.ZERO;
+        this.gros = Money.ZERO;
+    }
 
 
-	private Id id;
+    public void addItem(InvoiceLine item) {
+        items.add(item);
 
-	Invoice(Id invoiceId, ClientData client) {
-		this.id = invoiceId;
-		this.client = client;
-		this.items = new ArrayList<InvoiceLine>();
-		
-		this.net = Money.ZERO;
-		this.gros = Money.ZERO;
-	}
-	
+        net = net.add(item.getNet());
+        gros = gros.add(item.getGros());
+    }
 
-	public void addItem(InvoiceLine item) {
-		items.add(item);
+    /**
+     * @return immutable projection
+     */
+    public List<InvoiceLine> getItems() {
+        return Collections.unmodifiableList(items);
+    }
 
-		net = net.add(item.getNet());
-		gros = gros.add(item.getGros());
-	}
+    public ClientData getClient() {
+        return client;
+    }
 
-	/**
-	 * 
-	 * @return immutable projection
-	 */
-	public List<InvoiceLine> getItems() {
-		return Collections.unmodifiableList(items);
-	}
+    public Money getNet() {
+        return net;
+    }
 
-	public ClientData getClient() {
-		return client;
-	}
-
-	public Money getNet() {
-		return net;
-	}
-
-	public Money getGros() {
-		return gros;
-	}
+    public Money getGros() {
+        return gros;
+    }
 
 }
