@@ -57,6 +57,7 @@ public class AddProductCommandHandlerTest {
         reservation = new Reservation(Id.generate(), Reservation.ReservationStatus.OPENED, mock(ClientData.class), new Date());
 
 
+
         when(reservationRepository.load(any())).thenReturn(reservation);
         when(productRepository.load(any())).thenReturn(product);
         when(suggestionService.suggestEquivalent(product, client)).thenReturn(product2);
