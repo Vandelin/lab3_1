@@ -52,7 +52,11 @@ public class AddProductCommandHandlerTest {
         addProductCommand = new AddProductCommand(Id.generate(), Id.generate(), 10);
         product = new Product(Id.generate(), new Money(3.34, Money.DEFAULT_CURRENCY), "tempId", ProductType.FOOD);
         product2 = new Product(Id.generate(), new Money(3.35, Money.DEFAULT_CURRENCY), "tempId", ProductType.FOOD);
+
+
         reservation = new Reservation(Id.generate(), Reservation.ReservationStatus.OPENED, mock(ClientData.class), new Date());
+
+
         when(reservationRepository.load(any())).thenReturn(reservation);
         when(productRepository.load(any())).thenReturn(product);
         when(suggestionService.suggestEquivalent(product, client)).thenReturn(product2);
