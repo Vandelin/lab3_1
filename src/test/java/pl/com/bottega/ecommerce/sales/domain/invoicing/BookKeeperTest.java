@@ -25,6 +25,7 @@ public class BookKeeperTest {
     private BookKeeper bookKeeper;
 
 
+
     @Before
     public void setup() {
         invoiceRequest = new InvoiceRequest(new ClientData(Id.generate(), "Peter"));
